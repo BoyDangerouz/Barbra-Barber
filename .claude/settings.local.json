@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npm *)",
+      "PowerShell(npm start *)",
+      "PowerShell(node scripts/smoke.mjs)",
+      "PowerShell(python scripts/prep_assets.py)",
+      "PowerShell(npm run *)",
+      "PowerShell(npx --yes vercel@latest whoami 2>&1 | Select-Object -Last 3)"
+    ]
+  }
+}

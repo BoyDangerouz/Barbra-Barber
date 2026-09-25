@@ -1,0 +1,277 @@
+@import "tailwindcss";
+
+/*
+ * Barbra Barber — design tokens.
+ *
+ * Two surfaces: near-black (`ink`) and warm off-white (`cream`). Gold is the
+ * single accent. Contrast ratios against ink, all AA or better:
+ *   cream  17.8:1   gold 9.1:1   muted 7.8:1
+ * Gold is deliberately never used for body text on cream (1.8:1) — `gold-700`
+ * is the darkened variant for that case, at 5.1:1.
+ */
+@theme {
+  --color-ink: #0b0b0b;
+  --color-ink-800: #141312;
+  --color-ink-700: #1c1a18;
+  --color-ink-600: #2a2724;
+  --color-ink-500: #3a3632;
+
+  --color-gold: #e8a33c;
+  --color-gold-300: #f7c55e;
+  --color-gold-600: #c9862a;
+  --color-gold-700: #8a5e12;
+
+  --color-cream: #f7f4ee;
+  --color-cream-200: #ebe5da;
+  --color-cream-300: #ddd5c6;
+
+  --color-muted: #a9a29a;
+  --color-muted-dark: #5d574f;
+
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 0.875rem;
+
+  --shadow-lift: 0 18px 40px -22px rgb(0 0 0 / 0.55);
+  --shadow-gold: 0 14px 34px -18px rgb(232 163 60 / 0.55);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Next 16 no longer overrides scroll-behavior on navigation unless asked. */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* One visible focus style for the whole site, legible on both surfaces. */
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background-color: var(--color-gold);
+    color: var(--color-ink);
+  }
+
+  /* Stop the page shifting sideways when a modal locks scrolling. */
+  body {
+    scrollbar-gutter: stable;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* ── Layout ───────────────────────────────────────────────────────── */
+  .shell {
+    width: 100%;
+    margin-inline: auto;
+    max-width: 80rem;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .shell { padding-inline: 2rem; }
+  }
+  @media (min-width: 1024px) {
+    .shell { padding-inline: 2.5rem; }
+  }
+
+  .section {
+    padding-block: 4.5rem;
+  }
+  @media (min-width: 768px) {
+    .section { padding-block: 6rem; }
+  }
+
+  /* ── Type ─────────────────────────────────────────────────────────── */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-gold-700);
+  }
+  .on-ink .eyebrow,
+  .eyebrow-light {
+    color: var(--color-gold);
+  }
+
+  .display-1 {
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    line-height: 1.02;
+  }
+  .display-2 {
+    font-size: clamp(2rem, 4.6vw, 3rem);
+    line-height: 1.1;
+  }
+  .display-3 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.2;
+  }
+
+  /* ── Buttons ──────────────────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    line-height: 1;
+    padding: 0.9375rem 1.75rem;
+    transition: background-color 180ms var(--ease-out-soft),
+                color 180ms var(--ease-out-soft),
+                border-color 180ms var(--ease-out-soft),
+                transform 180ms var(--ease-out-soft),
+                box-shadow 180ms var(--ease-out-soft);
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-primary {
+    background-color: var(--color-gold);
+    color: var(--color-ink);
+    box-shadow: var(--shadow-gold);
+  }
+  .btn-primary:hover:not(:disabled):not([aria-disabled="true"]) {
+    background-color: var(--color-gold-300);
+  }
+
+  .btn-outline-light {
+    border-color: rgb(255 255 255 / 0.35);
+    color: var(--color-cream);
+  }
+  .btn-outline-light:hover:not(:disabled) {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+  }
+
+  .btn-outline-dark {
+    border-color: var(--color-ink-600);
+    color: var(--color-ink);
+  }
+  .btn-outline-dark:hover:not(:disabled) {
+    border-color: var(--color-ink);
+    background-color: var(--color-ink);
+    color: var(--color-cream);
+  }
+
+  .btn-ghost-dark {
+    color: var(--color-ink);
+  }
+  .btn-ghost-dark:hover:not(:disabled) {
+    background-color: var(--color-cream-200);
+  }
+
+  .btn-sm {
+    padding: 0.625rem 1.125rem;
+    font-size: 0.875rem;
+  }
+
+  /* ── Surfaces ─────────────────────────────────────────────────────── */
+  .card-dark {
+    background-color: var(--color-ink-800);
+    border: 1px solid var(--color-ink-600);
+    border-radius: var(--radius-card);
+  }
+  .card-light {
+    background-color: #fff;
+    border: 1px solid var(--color-cream-300);
+    border-radius: var(--radius-card);
+  }
+
+  .hairline {
+    border-top: 1px solid var(--color-ink-600);
+  }
+
+  /* Gold rule used under section eyebrows. */
+  .rule-gold::after {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 2px;
+    margin-top: 0.875rem;
+    background-color: var(--color-gold);
+  }
+}
+
+@keyframes promo-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@layer utilities {
+  .text-shadow-hero {
+    text-shadow: 0 2px 24px rgb(0 0 0 / 0.65);
+  }
+
+  /* Keeps hero copy legible over the photograph at every breakpoint. */
+  .hero-scrim {
+    background: linear-gradient(
+      100deg,
+      rgb(11 11 11 / 0.94) 0%,
+      rgb(11 11 11 / 0.86) 32%,
+      rgb(11 11 11 / 0.55) 58%,
+      rgb(11 11 11 / 0.3) 100%
+    );
+  }
+  @media (max-width: 767px) {
+    .hero-scrim {
+      background: linear-gradient(
+        180deg,
+        rgb(11 11 11 / 0.72) 0%,
+        rgb(11 11 11 / 0.82) 55%,
+        rgb(11 11 11 / 0.95) 100%
+      );
+    }
+  }
+}
